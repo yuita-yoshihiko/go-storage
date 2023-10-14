@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	cloud.google.com/go/storage v1.33.0
+	github.com/lib/pq v1.10.9
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 )
 
