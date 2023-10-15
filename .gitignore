@@ -1,2 +1,2 @@
 .env
-google_service_account_key.json
+/secrets/*
