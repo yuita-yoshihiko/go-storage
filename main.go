@@ -46,8 +46,15 @@ func main() {
 	}
 	defer dbInstance.Close()
 
-	if err := db.InsertInitialData(dbInstance); err != nil {
-		log.Fatalf("初期データの挿入に失敗しました: %v", err)
+	shouldInsert, err := db.ShouldInsertData(dbInstance)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if shouldInsert {
+		if err := db.InsertInitialData(dbInstance); err != nil {
+			log.Fatalf("初期データの挿入に失敗しました: %v", err)
+		}
 	}
 
 	objectName := latestObject.ObjectName()

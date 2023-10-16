@@ -9,17 +9,21 @@ services:
       - .:/go-storage
       - ./secrets/credentials.json:/app/credentials.json
     environment:
-      - DB_USER=${DB_USER}
-      - DB_NAME=${DB_NAME}
-      - DB_SSLMODE=${DB_SSLMODE}
-      - DB_HOST=${DB_HOST}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_PORT=${DB_PORT}
-      - BUCKET_NAME=${BUCKET_NAME}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_USER=${POSTGRES_USER:-postgres}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - DB_NAME=${POSTGRES_DB:-postgres}
+      - DB_SSLMODE=${DB_SSLMODE:-disable}
+      - BUCKET_NAME=${BUCKET_NAME:-go-storage-bucket}
       - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials.json
   db:
     image: postgres:13
+    volumes: 
+      - pgdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - POSTGRES_DB=${POSTGRES_DB:-postgres}
+volumes:
+  pgdata:
