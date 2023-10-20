@@ -7,7 +7,7 @@ services:
     command: ["tail", "-f", "/dev/null"]
     volumes:
       - .:/go-storage
-      - ./secrets/credentials.json:/app/credentials.json
+      - ./credentials.json:/app/credentials.json
     environment:
       - DB_HOST=${DB_HOST:-db}
       - DB_PORT=${DB_PORT:-5432}
