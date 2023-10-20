@@ -41,7 +41,7 @@ cp .envsample .env
 
 **4.バケット名を環境変数に書き込む(your_bucket_nameの部分は自身のGCSのバケット名を入力)**  
 ```sh
-echo BUCKET_NAME=your_bucket_name .env
+echo "BUCKET_NAME=your_bucket_name" >> .env
 ```  
 
 **5. ./secretsディレクトリ配下にcredentials.jsonファイルを配置**  
