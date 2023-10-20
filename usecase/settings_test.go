@@ -1,4 +1,4 @@
-package src
+package usecase
 
 import (
 	"database/sql"
@@ -16,11 +16,11 @@ func TestGetConversionSettings(t *testing.T) {
 		id int
 	}
 	tests := []struct {
-		name         string
-		args         args
-		setupMock    func(mock sqlmock.Sqlmock, args args)
-		want         *ImageConversionSetting
-		wantErr      bool
+		name      string
+		args      args
+		setupMock func(mock sqlmock.Sqlmock, args args)
+		want      *ImageConversionSetting
+		wantErr   bool
 	}{
 		{
 			name: "valid case",
@@ -58,7 +58,7 @@ func TestGetConversionSettings(t *testing.T) {
 				t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 			}
 			defer db.Close()
-			
+
 			tt.setupMock(mock, tt.args)
 
 			got, err := GetConversionSettings(db, tt.args.id)

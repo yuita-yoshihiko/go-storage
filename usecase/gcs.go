@@ -1,4 +1,4 @@
-package src
+package usecase
 
 import (
 	"context"
@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"google.golang.org/api/iterator"
 	_ "github.com/lib/pq"
+	"google.golang.org/api/iterator"
 )
 
 type StorageClient interface {

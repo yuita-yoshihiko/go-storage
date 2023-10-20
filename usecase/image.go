@@ -1,4 +1,4 @@
-package src
+package usecase
 
 import (
 	"bytes"
@@ -11,10 +11,10 @@ import (
 	"io"
 	"io/ioutil"
 	"strings"
-	
+
 	"cloud.google.com/go/storage"
-	"github.com/nfnt/resize"
 	_ "github.com/lib/pq"
+	"github.com/nfnt/resize"
 )
 
 func DownloadImage(ctx context.Context, client *storage.Client, bucketName, objectName string) ([]byte, error) {

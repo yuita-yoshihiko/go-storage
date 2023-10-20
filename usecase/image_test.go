@@ -1,8 +1,8 @@
-package src
+package usecase
 
 import (
-	"testing"
 	"io/ioutil"
+	"testing"
 
 	_ "github.com/lib/pq"
 )
@@ -13,7 +13,7 @@ func TestCheckImageFormat(t *testing.T) {
 	}
 	data, err := ioutil.ReadFile("../testdata/test.jpeg")
 	if err != nil {
-			t.Fatalf("failed to read test data: %v", err)
+		t.Fatalf("failed to read test data: %v", err)
 	}
 	tests := []struct {
 		name    string
@@ -24,9 +24,9 @@ func TestCheckImageFormat(t *testing.T) {
 		{
 			name: "valid case",
 			args: args{
-				data:  data,
+				data: data,
 			},
-			want: "jpeg",
+			want:    "jpeg",
 			wantErr: false,
 		},
 	}
@@ -53,7 +53,7 @@ func TestResizeImage(t *testing.T) {
 	}
 	data, err := ioutil.ReadFile("../testdata/test.jpeg")
 	if err != nil {
-			t.Fatalf("failed to read test data: %v", err)
+		t.Fatalf("failed to read test data: %v", err)
 	}
 
 	tests := []struct {
@@ -64,8 +64,8 @@ func TestResizeImage(t *testing.T) {
 		{
 			name: "valid case",
 			args: args{
-				data:  data,
-				width: 0.8,
+				data:   data,
+				width:  0.8,
 				height: 0.8,
 				format: "jpeg",
 			},

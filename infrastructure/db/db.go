@@ -6,7 +6,7 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
-	"go-storage/src"
+	"go-storage/usecase"
 )
 
 func CreateDBConnection() (*sql.DB, error) {
@@ -36,7 +36,7 @@ func ShouldInsertData(dbInstance *sql.DB) (bool, error) {
 
 func InsertInitialData(dbInstance *sql.DB) error {
 	query := `INSERT INTO image_conversion_settings (output_format, resize_w, resize_h) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING`
-	settings := []src.ImageConversionSetting{
+	settings := []usecase.ImageConversionSetting{
 		{"jpg", 0.8, 0.8},
 		{"png", 0.8, 0.8},
 	}
