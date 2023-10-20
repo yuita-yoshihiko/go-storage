@@ -54,7 +54,7 @@ docker-compose up -d --build
 
 **7.マイグレーションを実行**  
 ```sh
-docker-compose exec app migrate -database "postgres://postgres:password@db:5432/postgres?sslmode=disable" -path ./src/database/migrations up
+docker-compose exec app migrate -database "postgres://postgres:password@db:5432/postgres?sslmode=disable" -path ./infrastructure/db/migrations up
 ```  
 
 **8.画像変換処理を実行($[Num}の部分はjpegの場合1、pngの場合2)**
