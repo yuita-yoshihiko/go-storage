@@ -44,8 +44,10 @@ cp .envsample .env
 echo "BUCKET_NAME=your_bucket_name" >> .env
 ```  
 
-**5.ルートディレクトリ配下にcredentials.jsonファイルを配置**  
-GCPのサービスアカウントキーを **credentials.json** というファイル名にしてルートディレクトリに配置してください。
+**5.ルートディレクトリ配下にcredentials.jsonファイルを作成し、GCPのサービスアカウントキーの内容をコピー**  
+```sh
+touch credentials.json
+```  
 
 **6.Dockerイメージをビルドしコンテナを起動**  
 ```sh
