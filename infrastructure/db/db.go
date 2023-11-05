@@ -9,6 +9,7 @@ import (
 	"go-storage/usecase"
 )
 
+// DB接続を作成する
 func CreateDBConnection() (*sql.DB, error) {
 	connStr := fmt.Sprintf("user=%s dbname=%s sslmode=%s host=%s password=%s",
 		os.Getenv("DB_USER"),
@@ -25,6 +26,7 @@ func CreateDBConnection() (*sql.DB, error) {
 	return dbInstance, nil
 }
 
+// 変換用データが存在するか確認する。存在する場合（countが0じゃない）はfalseを、存在しない場合（countが0）はtrueを返す
 func ShouldInsertData(dbInstance *sql.DB) (bool, error) {
 	var count int
 	err := dbInstance.QueryRow("SELECT COUNT(*) FROM image_conversion_settings").Scan(&count)
@@ -34,6 +36,7 @@ func ShouldInsertData(dbInstance *sql.DB) (bool, error) {
 	return count == 0, nil
 }
 
+// 変換用データを挿入する
 func InsertInitialData(dbInstance *sql.DB) error {
 	query := `INSERT INTO image_conversion_settings (output_format, resize_w, resize_h) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING`
 	settings := []usecase.ImageConversionSetting{
@@ -48,12 +51,14 @@ func InsertInitialData(dbInstance *sql.DB) error {
 	return nil
 }
 
+// 元の画像の情報を保存する
 func SaveOriginalImageInfo(dbInstance *sql.DB, gcsObjectName string) error {
 	query := `INSERT INTO original_images (object_name) VALUES ($1)`
 	_, err := dbInstance.Exec(query, gcsObjectName)
 	return err
 }
 
+// 変換後の画像の情報を保存する
 func SaveResizedImageInfo(dbInstance *sql.DB, gcsObjectName string) error {
 	query := `INSERT INTO converted_images (converted_object_name) VALUES ($1)`
 	_, err := dbInstance.Exec(query, gcsObjectName)

@@ -14,6 +14,7 @@ type StorageClient interface {
 	Bucket(name string) *storage.BucketHandle
 }
 
+// 最新の画像を取得する
 func GetLatestObject(ctx context.Context, client StorageClient, bucketName string) (*storage.ObjectHandle, error) {
 	bkt := client.Bucket(bucketName)
 
@@ -32,6 +33,7 @@ func GetLatestObject(ctx context.Context, client StorageClient, bucketName strin
 			return nil, err
 		}
 
+		// ここで最新の画像を取得している
 		if attrs.Updated.After(latestTime) {
 			latestTime = attrs.Updated
 			latestObject = bkt.Object(attrs.Name)
@@ -45,6 +47,7 @@ func GetLatestObject(ctx context.Context, client StorageClient, bucketName strin
 	return latestObject, nil
 }
 
+// Googleクライアントの作成（GCPを操作するための初期設定的な）
 func CreateClient(ctx context.Context) (*storage.Client, error) {
 	return storage.NewClient(ctx)
 }

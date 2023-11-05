@@ -12,6 +12,7 @@ type ImageConversionSetting struct {
 	ResizeH      float64
 }
 
+// 入力されたIDに応じてDBから画像変換設定を取得する
 func GetConversionSettings(db *sql.DB, id int) (*ImageConversionSetting, error) {
 	query := `SELECT output_format, resize_w, resize_h FROM image_conversion_settings WHERE id = $1`
 	setting := &ImageConversionSetting{}

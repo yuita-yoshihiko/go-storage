@@ -18,6 +18,7 @@ import (
 )
 
 func DownloadImage(ctx context.Context, client *storage.Client, bucketName, objectName string) ([]byte, error) {
+	// 拡張子をチェック
 	if !strings.HasSuffix(strings.ToLower(objectName), ".jpg") && !strings.HasSuffix(strings.ToLower(objectName), ".jpeg") && !strings.HasSuffix(strings.ToLower(objectName), ".png") {
 		return nil, errors.New("jpeg(jpg)、またはpng形式の画像を選択してください。")
 	}
@@ -38,6 +39,7 @@ func DownloadImage(ctx context.Context, client *storage.Client, bucketName, obje
 		return nil, err
 	}
 
+	// 拡張子と実際の画像タイプが異なっていたらエラー
 	if format == "jpeg" && !strings.HasSuffix(strings.ToLower(objectName), ".jpg") && !strings.HasSuffix(strings.ToLower(objectName), ".jpeg") {
 		return nil, errors.New("ファイルの拡張子と実際の画像タイプが異なっています。")
 	} else if format == "png" && !strings.HasSuffix(strings.ToLower(objectName), ".png") {
@@ -47,6 +49,7 @@ func DownloadImage(ctx context.Context, client *storage.Client, bucketName, obje
 	return data, nil
 }
 
+// 画像タイプをチェック
 func CheckImageFormat(data []byte) (string, error) {
 	_, format, err := image.DecodeConfig(bytes.NewReader(data))
 	if err != nil {
@@ -60,6 +63,7 @@ func CheckImageFormat(data []byte) (string, error) {
 	return format, nil
 }
 
+// 画像をリサイズ
 func ResizeImage(data []byte, width, height float64, format string) ([]byte, error) {
 	img, _, err := image.Decode(bytes.NewReader(data))
 	if err != nil {
@@ -86,6 +90,7 @@ func ResizeImage(data []byte, width, height float64, format string) ([]byte, err
 	return buf.Bytes(), nil
 }
 
+// リサイズした画像をアップロード
 func UploadImage(ctx context.Context, client *storage.Client, bucketName, objectName string, data []byte) error {
 	bkt := client.Bucket(bucketName)
 	obj := bkt.Object(objectName)
