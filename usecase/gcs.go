@@ -10,6 +10,18 @@ import (
 	"google.golang.org/api/iterator"
 )
 
+type ClientCreator interface {
+	NewClient(ctx context.Context) (*storage.Client, error)
+}
+
+type MockClientCreator struct {
+	Client *storage.Client
+	Err    error
+}
+
+func (m *MockClientCreator) NewClient(ctx context.Context) (*storage.Client, error) {
+	return m.Client, m.Err
+}
 type StorageClient interface {
 	Bucket(name string) *storage.BucketHandle
 }
@@ -48,6 +60,6 @@ func GetLatestObject(ctx context.Context, client StorageClient, bucketName strin
 }
 
 // Googleクライアントの作成（GCPを操作するための初期設定的な）
-func CreateClient(ctx context.Context) (*storage.Client, error) {
-	return storage.NewClient(ctx)
+func CreateClient(ctx context.Context, cc ClientCreator) (*storage.Client, error) {
+	return cc.NewClient(ctx)
 }

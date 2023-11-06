@@ -15,13 +15,14 @@ import (
 
 func main() {
 	ctx := context.Background()
+	cc := &usecase.MockClientCreator{}
 
 	bucketName, id, err := validateAndParseArgs()
 	if err != nil {
 		log.Fatalf("引数のバリデーションに失敗しました: %v", err)
 	}
 
-	if err := processImage(ctx, bucketName, id); err != nil {
+	if err := processImage(ctx, cc, bucketName, id); err != nil {
 		log.Fatalf("画像の処理に失敗しました: %v", err)
 	}
 }
@@ -42,8 +43,8 @@ func validateAndParseArgs() (bucketName string, id int, err error) {
 	return bucketName, id, nil
 }
 
-func processImage(ctx context.Context, bucketName string, id int) error {
-	client, err := usecase.CreateClient(ctx)
+func processImage(ctx context.Context, cc usecase.ClientCreator, bucketName string, id int) error {
+	client, err := usecase.CreateClient(ctx, cc)
 	if err != nil {
 		return fmt.Errorf("クライアントの作成に失敗しました: %w", err)
 	}
