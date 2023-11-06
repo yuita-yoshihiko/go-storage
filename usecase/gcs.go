@@ -16,13 +16,10 @@ type StorageClient interface {
 
 func GetLatestObject(ctx context.Context, client StorageClient, bucketName string) (*storage.ObjectHandle, error) {
 	bkt := client.Bucket(bucketName)
-
 	query := &storage.Query{}
 	it := bkt.Objects(ctx, query)
-
 	var latestObject *storage.ObjectHandle
 	var latestTime time.Time
-
 	for {
 		attrs, err := it.Next()
 		if err == iterator.Done {
@@ -31,17 +28,14 @@ func GetLatestObject(ctx context.Context, client StorageClient, bucketName strin
 		if err != nil {
 			return nil, err
 		}
-
 		if attrs.Updated.After(latestTime) {
 			latestTime = attrs.Updated
 			latestObject = bkt.Object(attrs.Name)
 		}
 	}
-
 	if latestObject == nil {
 		return nil, fmt.Errorf("画像が存在しません。")
 	}
-
 	return latestObject, nil
 }
 

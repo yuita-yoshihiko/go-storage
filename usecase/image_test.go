@@ -13,7 +13,7 @@ func TestCheckImageFormat(t *testing.T) {
 	}
 	data, err := ioutil.ReadFile("../testdata/test.jpeg")
 	if err != nil {
-		t.Fatalf("failed to read test data: %v", err)
+		t.Fatalf("テストデータの読み込みに失敗しました: %v", err)
 	}
 	tests := []struct {
 		name    string
@@ -55,7 +55,6 @@ func TestResizeImage(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to read test data: %v", err)
 	}
-
 	tests := []struct {
 		name    string
 		args    args

@@ -40,7 +40,7 @@ func TestGetConversionSettings(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "DB error case",
+			name: "invalid case",
 			args: args{id: 2},
 			setupMock: func(mock sqlmock.Sqlmock, args args) {
 				mock.ExpectQuery(`SELECT output_format, width_resize_ratio, height_resize_ratio FROM image_conversion_settings WHERE id = \$1`).
@@ -58,9 +58,7 @@ func TestGetConversionSettings(t *testing.T) {
 				t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 			}
 			defer db.Close()
-
 			tt.setupMock(mock, tt.args)
-
 			got, err := GetConversionSettings(db, tt.args.id)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetConversionSettings() error = %v, wantErr %v", err, tt.wantErr)
@@ -69,7 +67,6 @@ func TestGetConversionSettings(t *testing.T) {
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetConversionSettings() = %v, want %v", got, tt.want)
 			}
-
 			if err := mock.ExpectationsWereMet(); err != nil {
 				t.Errorf("there were unfulfilled expectations: %s", err)
 			}
