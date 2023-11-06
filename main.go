@@ -87,7 +87,7 @@ func processImage(ctx context.Context, cc usecase.ClientCreator, bucketName stri
 		return fmt.Errorf("画像のダウンロードに失敗しました: %w", err)
 	}
 
-	resizedData, err := usecase.ResizeImage(data, conversionSettings.ResizeW, conversionSettings.ResizeH, conversionSettings.OutputFormat)
+	resizedData, err := usecase.ResizeImage(data, conversionSettings.WidthResizeRatio, conversionSettings.HeightResizeRatio, conversionSettings.OutputFormat)
 	if err != nil {
 		return fmt.Errorf("画像のリサイズに失敗しました: %w", err)
 	}

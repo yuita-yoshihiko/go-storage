@@ -38,13 +38,13 @@ func ShouldInsertData(dbInstance *sql.DB) (bool, error) {
 
 // 変換用データを挿入する
 func InsertInitialData(dbInstance *sql.DB) error {
-	query := `INSERT INTO image_conversion_settings (output_format, resize_w, resize_h) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING`
+	query := `INSERT INTO image_conversion_settings (output_format, width_resize_ratio, height_resize_ratio) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING`
 	settings := []usecase.ImageConversionSetting{
 		{"jpg", 0.8, 0.8},
 		{"png", 0.8, 0.8},
 	}
 	for _, setting := range settings {
-		if _, err := dbInstance.Exec(query, setting.OutputFormat, setting.ResizeW, setting.ResizeH); err != nil {
+		if _, err := dbInstance.Exec(query, setting.OutputFormat, setting.WidthResizeRatio, setting.HeightResizeRatio); err != nil {
 			return err
 		}
 	}
