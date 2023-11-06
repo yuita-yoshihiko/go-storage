@@ -26,16 +26,16 @@ func TestGetConversionSettings(t *testing.T) {
 			name: "valid case",
 			args: args{id: 1},
 			setupMock: func(mock sqlmock.Sqlmock, args args) {
-				rows := sqlmock.NewRows([]string{"output_format", "resize_w", "resize_h"}).
+				rows := sqlmock.NewRows([]string{"output_format", "width_resize_ratio", "height_resize_ratio"}).
 					AddRow("jpeg", 0.8, 0.8)
-				mock.ExpectQuery(`SELECT output_format, resize_w, resize_h FROM image_conversion_settings WHERE id = \$1`).
+				mock.ExpectQuery(`SELECT output_format, width_resize_ratio, height_resize_ratio FROM image_conversion_settings WHERE id = \$1`).
 					WithArgs(args.id).
 					WillReturnRows(rows)
 			},
 			want: &ImageConversionSetting{
 				OutputFormat: "jpeg",
-				ResizeW:      0.8,
-				ResizeH:      0.8,
+				WidthResizeRatio:      0.8,
+				HeightResizeRatio:      0.8,
 			},
 			wantErr: false,
 		},
@@ -43,7 +43,7 @@ func TestGetConversionSettings(t *testing.T) {
 			name: "invalid case",
 			args: args{id: 2},
 			setupMock: func(mock sqlmock.Sqlmock, args args) {
-				mock.ExpectQuery(`SELECT output_format, resize_w, resize_h FROM image_conversion_settings WHERE id = \$1`).
+				mock.ExpectQuery(`SELECT output_format, width_resize_ratio, height_resize_ratio FROM image_conversion_settings WHERE id = \$1`).
 					WithArgs(args.id).
 					WillReturnError(errors.New("DB error"))
 			},

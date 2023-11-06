@@ -8,13 +8,13 @@ import (
 
 type ImageConversionSetting struct {
 	OutputFormat string
-	ResizeW      float64
-	ResizeH      float64
+	WidthResizeRatio      float64
+	HeightResizeRatio      float64
 }
 
 // 入力されたIDに応じてDBから画像変換設定を取得する
 func GetConversionSettings(db *sql.DB, id int) (*ImageConversionSetting, error) {
-	query := `SELECT output_format, resize_w, resize_h FROM image_conversion_settings WHERE id = $1`
+	query := `SELECT output_format, width_resize_ratio, height_resize_ratio FROM image_conversion_settings WHERE id = $1`
 	setting := &ImageConversionSetting{}
 
 	var format string
@@ -24,8 +24,8 @@ func GetConversionSettings(db *sql.DB, id int) (*ImageConversionSetting, error) 
 	}
 
 	setting.OutputFormat = format
-	setting.ResizeW = float64(width)
-	setting.ResizeH = float64(height)
+	setting.WidthResizeRatio = float64(width)
+	setting.HeightResizeRatio = float64(height)
 
 	return setting, nil
 }
