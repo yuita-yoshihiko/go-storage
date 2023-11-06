@@ -45,7 +45,6 @@ func TestGetLatestObject(t *testing.T) {
 func TestCreateClient(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		cc  ClientCreator
 	}
 	tests := []struct {
 		name    string
@@ -55,14 +54,14 @@ func TestCreateClient(t *testing.T) {
 	}{
 		{
 			name:    "valid case",
-			args:    args{ctx: context.Background(), cc: &ClientCreatorMock{}},
+			args:    args{ctx: context.Background()},
 			want:    &storage.Client{},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := CreateClient(tt.args.ctx, tt.args.cc)
+			got, err := CreateClient(tt.args.ctx)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CreateClient() error = %v, wantErr %v", err, tt.wantErr)
 				return
