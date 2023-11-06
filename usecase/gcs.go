@@ -22,6 +22,7 @@ type MockClientCreator struct {
 func (m *MockClientCreator) NewClient(ctx context.Context) (*storage.Client, error) {
 	return m.Client, m.Err
 }
+
 type StorageClient interface {
 	Bucket(name string) *storage.BucketHandle
 }
@@ -29,13 +30,10 @@ type StorageClient interface {
 // 最新の画像を取得する
 func GetLatestObject(ctx context.Context, client StorageClient, bucketName string) (*storage.ObjectHandle, error) {
 	bkt := client.Bucket(bucketName)
-
 	query := &storage.Query{}
 	it := bkt.Objects(ctx, query)
-
 	var latestObject *storage.ObjectHandle
 	var latestTime time.Time
-
 	for {
 		attrs, err := it.Next()
 		if err == iterator.Done {
@@ -44,18 +42,15 @@ func GetLatestObject(ctx context.Context, client StorageClient, bucketName strin
 		if err != nil {
 			return nil, err
 		}
-
 		// ここで最新の画像を取得している
 		if attrs.Updated.After(latestTime) {
 			latestTime = attrs.Updated
 			latestObject = bkt.Object(attrs.Name)
 		}
 	}
-
 	if latestObject == nil {
 		return nil, fmt.Errorf("画像が存在しません。")
 	}
-
 	return latestObject, nil
 }
 

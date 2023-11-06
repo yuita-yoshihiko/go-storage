@@ -22,7 +22,6 @@ func CreateDBConnection() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return dbInstance, nil
 }
 
