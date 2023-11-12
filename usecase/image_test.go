@@ -1,83 +1,72 @@
 package usecase
 
 import (
-	"io/ioutil"
-	"testing"
-
-	_ "github.com/lib/pq"
+  "io/ioutil"
+  "testing"
 )
 
+const (
+  validDataPath = "../testdata/test.jpeg"
+  invalidDataPath = "../testdata/test.txt"
+  widthResizeRatio = 0.8
+  heightResizeRatio = 0.8
+  expectedFormat = "jpeg"
+	invalidFormat = "invalid format"
+)
+
+func readTestData(t *testing.T, filepath string) []byte {
+  t.Helper()
+  data, err := ioutil.ReadFile(filepath)
+  if err != nil {
+    t.Fatalf("テストデータの読み込みに失敗しました: %v", err)
+  }
+  return data
+}
+
+func setupTestData(t *testing.T) (validData, invalidData []byte) {
+	t.Helper()
+	validData = readTestData(t, validDataPath)
+	invalidData = readTestData(t, invalidDataPath)
+	return
+}
+
 func TestCheckImageFormat(t *testing.T) {
-	type args struct {
-		data []byte
-	}
-	data, err := ioutil.ReadFile("../testdata/test.jpeg")
-	if err != nil {
-		t.Fatalf("テストデータの読み込みに失敗しました: %v", err)
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    string
-		wantErr bool
-	}{
-		{
-			name: "valid case",
-			args: args{
-				data: data,
-			},
-			want:    "jpeg",
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := CheckImageFormat(tt.args.data)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("CheckImageFormat() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("CheckImageFormat() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+  validData, invalidData := setupTestData(t)
+  tests := map[string]struct {
+    data    []byte
+    want    string
+    wantErr bool
+  }{
+    "valid case":   {validData, expectedFormat, false},
+    "invalid case": {invalidData, "", true},
+  }
+  for testName, tt := range tests {
+    t.Run(testName, func(t *testing.T) {
+      got, err := CheckImageFormat(tt.data)
+      if (err != nil) != tt.wantErr {
+        t.Errorf("CheckImageFormat() error = %v, wantErr = %v", err, tt.wantErr)
+      } else if got != tt.want {
+        t.Errorf("CheckImageFormat() = %v, want = %v", got, tt.want)
+      }
+    })
+  }
 }
 
 func TestResizeImage(t *testing.T) {
-	type args struct {
-		data   []byte
-		width  float64
-		height float64
-		format string
-	}
-	data, err := ioutil.ReadFile("../testdata/test.jpeg")
-	if err != nil {
-		t.Fatalf("failed to read test data: %v", err)
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{
-			name: "valid case",
-			args: args{
-				data:   data,
-				width:  0.8,
-				height: 0.8,
-				format: "jpeg",
-			},
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, err := ResizeImage(tt.args.data, tt.args.width, tt.args.height, tt.args.format)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ResizeImage() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-		})
-	}
+  validData, _ := setupTestData(t)
+  tests := map[string]struct {
+    format  string
+    wantErr bool
+  }{
+    "valid case":   {expectedFormat, false},
+    "invalid case": {invalidFormat, true},
+  }
+  for testName, tt := range tests {
+    t.Run(testName, func(t *testing.T) {
+      _, err := ResizeImage(validData, widthResizeRatio, heightResizeRatio, tt.format)
+      if (err != nil) != tt.wantErr {
+        t.Errorf("ResizeImage() error = %v, wantErr = %v", err, tt.wantErr)
+      }
+    })
+  }
 }
